@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climate Attitudes Survey</title>
+<style>
+  :root {
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #0f766e;
+    --accent-light: #ccfbf1;
+    --hover: #f9fafb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 40px 20px;
+    line-height: 1.55;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  header.survey-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  header.survey-header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  header.survey-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .progress {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 20px 0 28px;
+  }
+  .progress > div {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+  section.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  section.card h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  section.card .section-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  section.card p { font-size: 0.95rem; }
+  .vignette {
+    background: #fafaf9;
+    border-left: 4px solid var(--accent);
+    padding: 20px 22px;
+    border-radius: 6px;
+    font-size: 0.97rem;
+    line-height: 1.65;
+  }
+  .vignette p { margin: 0 0 12px; }
+  .vignette p:last-child { margin-bottom: 0; }
+  .question { margin-bottom: 22px; }
+  .question:last-child { margin-bottom: 0; }
+  .qtext {
+    font-size: 0.98rem;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .likert { display: grid; gap: 4px; }
+  .likert-row {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 7), 1fr);
+    gap: 4px;
+  }
+  .likert-row label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 10px 4px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+    transition: background 0.15s, border-color 0.15s;
+    min-height: 64px;
+  }
+  .likert-row label:hover { background: var(--hover); }
+  .likert-row input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    margin: 0 0 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .likert-row input[type="radio"]:checked {
+    border-color: var(--accent);
+    background: radial-gradient(circle, var(--accent) 45%, transparent 50%);
+  }
+  .likert-row label:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .scale-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .scale-num {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .anchor-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 6px;
+    padding: 0 4px;
+  }
+  table.matrix {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 8px;
+  }
+  table.matrix th, table.matrix td {
+    padding: 10px 6px;
+    text-align: center;
+    font-weight: 400;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  table.matrix th {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    vertical-align: bottom;
+    padding-bottom: 12px;
+  }
+  table.matrix td.item-label {
+    text-align: left;
+    font-size: 0.94rem;
+    color: var(--text);
+    width: 38%;
+    padding-right: 14px;
+  }
+  table.matrix tr:last-child td { border-bottom: none; }
+  table.matrix tr:hover td { background: var(--hover); }
+  table.matrix input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin: 0;
+  }
+  table.matrix input[type="radio"]:checked {
+    border-color: var(--accent);
+    background: radial-gradient(circle, var(--accent) 45%, transparent 50%);
+  }
+  .dk-cell { font-size: 0.78rem; color: var(--muted); }
+  .note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 14px;
+  }
+  .demo-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .demo-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+    font-size: 0.93rem;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .demo-opt:hover { background: var(--hover); }
+  .demo-opt input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .demo-opt input[type="radio"]:checked {
+    border-color: var(--accent);
+    background: radial-gradient(circle, var(--accent) 45%, transparent 50%);
+  }
+  .demo-opt:has(input:checked) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .text-input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    width: 100%;
+  }
+  .text-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .summary-link {
+    color: var(--accent);
+    cursor: pointer;
+    font-weight: 500;
+    padding: 4px 0;
+    user-select: none;
+  }
+  .summary-link:hover { text-decoration: underline; }
+  .privacy-text {
+    margin-top: 14px;
+    padding: 18px;
+    background: #fafaf9;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .privacy-text p { margin: 0 0 10px; }
+  .privacy-text p:last-child { margin-bottom: 0; }
+  section.card.debrief {
+    border-left: 4px solid var(--accent);
+    background: #f0fdfa;
+  }
+  section.card.debrief p { font-size: 0.94rem; }
+  section.card.completion {
+    text-align: center;
+    background: #fafaf9;
+  }
+  section.card.completion h2 { color: var(--text); }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 12px;
+  }
+  .nav .spacer { flex: 1; }
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 26px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .btn.secondary {
+    background: #fff;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn:hover { opacity: 0.92; }
+  @media (max-width: 640px) {
+    .likert-row label { font-size: 0.7rem; padding: 8px 2px; }
+    .scale-label { display: none; }
+    table.matrix td.item-label { width: 45%; font-size: 0.88rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="survey-header">
+    <h1>Climate Attitudes Study</h1>
+    <p id="page-indicator">Page 1 of 4</p>
+    <div class="progress"><div id="progress-bar" style="width:25%"></div></div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- PAGE 1 — LANDING (welcome + privacy + ID + consent) -->
+  <!-- ============================================ -->
+  <div class="page active" id="page-1">
+
+    <section class="card">
+      <h2>Welcome</h2>
+      <p>Thank you for participating in this research study from the European University Institute. You are about to read a short article and answer questions about your views on climate change.</p>
+      <p><strong>What you will do:</strong> Read a short news-style article (~2 minutes) and complete a survey about your attitudes and views (~7–8 minutes). The study takes about <strong>10 minutes</strong> in total.</p>
+      <p><strong>Compensation:</strong> You will be paid via Prolific upon completion of the survey.</p>
+      <p><strong>Eligibility:</strong> This study is open to adults aged 18 or older residing in the United States.</p>
+      <p><strong>Voluntary:</strong> Your participation is entirely voluntary. You may skip any individual question you do not wish to answer, and you may withdraw at any time by closing the browser, with no consequence to your Prolific account.</p>
+      <p><strong>Privacy:</strong> Your responses are anonymous. No names, email addresses, or IP addresses are collected. Demographic information (age, gender, education, ethnicity, political identity) is provided directly by Prolific. Please see the full Privacy Statement below before consenting.</p>
+      <p><strong>Funding and ethics:</strong> This research is funded by the Magnus Bergvall Foundation and has been reviewed and approved by the European University Institute Ethics Committee. For questions about research ethics, contact <em>ethics@eui.eu</em>.</p>
+      <p><strong>A note on the study's aims:</strong> To preserve the scientific validity of the research, we are not able to share the full purpose of this study before you begin — knowing the specific hypotheses in advance can influence how people respond. You will receive a complete <strong>debrief</strong> at the end of the survey explaining what the study is testing.</p>
+    </section>
+
+    <section class="card">
+      <h2>Privacy Statement</h2>
+      <details>
+        <summary class="summary-link">Click to read the full Privacy Statement</summary>
+        <div class="privacy-text">
+          <p><em>Wired to Fail? The Effect of Climate Change Narratives on Pro-Environment Attitudes and Behavior</em></p>
+          <p><strong>Data Controller:</strong> Filip Olsson, European University Institute (filip.olsson@eui.eu)</p>
+          <p><strong>What we collect:</strong> Survey responses (climate attitudes, behavioral intentions, policy preferences) and a Prolific participant ID used solely for payment verification. Demographic data (age, gender, education, ethnicity, political identity) is obtained from Prolific. No names, email addresses, or IP addresses are collected.</p>
+          <p><strong>How we store it:</strong> Responses are collected via Qualtrics (EU-based GDPR-compliant servers) and exported to EUI institutional storage (OneDrive) accessible only to the research team.</p>
+          <p><strong>Retention:</strong> Prolific IDs are deleted after 30 days, at which point the dataset is fully anonymised. The anonymised dataset is retained for 10 years per EUI policy.</p>
+          <p><strong>Your rights:</strong> Under Article 16 of the EUI Data Protection Policy you have the right to access, correct, or request deletion of your data within the 30-day window. After anonymisation, individual responses can no longer be located. Contact: filip.olsson@eui.eu (DPO: data_protection_officer@eui.eu).</p>
+          <p><strong>Ethics:</strong> This study has been approved by the EUI Ethics Committee (ethics@eui.eu).</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Your Prolific ID</h2>
+      <div class="question">
+        <div class="qtext">Please confirm your Prolific ID. It should be filled in automatically from your Prolific session — please correct it if it looks wrong or is empty.</div>
+        <input type="text" class="text-input" value="[auto-filled from URL: PROLIFIC_PID]" style="max-width:420px;">
+        <p class="note">Your Prolific ID is used only to verify completion and issue payment. It is deleted after 30 days.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Consent</h2>
+      <p>Please confirm the following before continuing.</p>
+
+      <div class="question">
+        <div class="qtext">I have read and understood the information above. I am aged 18 or older and agree to participate in this research study voluntarily. I understand that I may withdraw at any time without consequence.</div>
+        <div class="demo-stack">
+          <label class="demo-opt"><input type="radio" name="consent1"> I agree to participate</label>
+          <label class="demo-opt"><input type="radio" name="consent1"> I do not agree to participate</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">I understand that my responses will be processed and stored as described in the Privacy Statement, and that the researcher will not identify me by name or any direct identifier in any output from this study.</div>
+        <div class="demo-stack">
+          <label class="demo-opt"><input type="radio" name="consent2"> I agree</label>
+          <label class="demo-opt"><input type="radio" name="consent2"> I do not agree</label>
+        </div>
+      </div>
+
+      <p class="note">Selecting "do not agree" to either item will exit the survey; no data will be recorded.</p>
+    </section>
+
+    <div class="nav">
+      <div class="spacer"></div>
+      <button class="btn" type="button" onclick="goToPage(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PAGE 2 — ARTICLE + QUICK CHECK -->
+  <!-- ============================================ -->
+  <div class="page" id="page-2">
+
+    <section class="card">
+      <h2>Article</h2>
+      <p class="section-desc">Please read the article below carefully.</p>
+      <div class="vignette">
+        <p>When Daniel Kahneman, the Nobel Prize-winning economist, was asked whether humanity could solve the climate crisis, he didn't sugarcoat it. "Climate change is really the kind of threat that we have not evolved to cope with." "It's too distant. It's too complex."</p>
+        <p>Many psychologists agree. The problem, they say, comes down to how our brains are built. When it comes to climate change, our human brains are inclined toward denial, with nearly no part of our psyche helping us reach an understanding that encourages positive action.</p>
+        <p>We're built to care more about what's happening today than what might happen in twenty years. For most of human history, the dangers that mattered were right in front of us — a predator, a flood, a rival tribe. Our brains got good at reacting fast to threats we could see and feel. Harvard psychologist Daniel Gilbert calls the human brain a "get-out-of-the-way machine," built to dodge a baseball or run from a snake in a split second. Climate change doesn't work that way. It unfolds little by little over decades, too slow for us to notice. As experts have warned, the problem isn't that people don't care. It's that it's moving too slowly to trigger any sense of urgency.</p>
+        <p>From a biological perspective, our personal needs — a new outfit, an affordable flight, a full fridge — feel far more urgent to our brains than abstract global threats. In other words, struggling to act on climate change doesn't make us selfish — it makes us human. As Elke Weber, professor of psychology at Columbia University, put it: "In a way, it's unfair to expect people, homo sapiens, to do this kind of decision making, because we're not wired for that".</p>
+        <p>And that is the irony at the heart of the climate crisis. We are arguably the most intelligent species to have ever walked the earth, and yet, when faced with the greatest threat to our own survival, our brains simply look the other way. Not out of stupidity or cruelty, but because we were never built for this.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Quick Check</h2>
+      <div class="question">
+        <div class="qtext">What was the article mainly about?</div>
+        <div class="demo-stack">
+          <label class="demo-opt"><input type="radio" name="mc1"> Human brains are not built for climate change.</label>
+          <label class="demo-opt"><input type="radio" name="mc1"> Governments are failing to act on climate change.</label>
+          <label class="demo-opt"><input type="radio" name="mc1"> Technology will solve climate change.</label>
+          <label class="demo-opt"><input type="radio" name="mc1"> Climate change hits poor countries hardest.</label>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button class="btn secondary" type="button" onclick="goToPage(1)">← Back</button>
+      <button class="btn" type="button" onclick="goToPage(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PAGE 3 — SURVEY ITEMS -->
+  <!-- ============================================ -->
+  <div class="page" id="page-3">
+
+    <section class="card">
+      <h2>Part 1 — Personal Efficacy</h2>
+      <p class="section-desc">Please indicate how much you agree with each statement.</p>
+
+      <div class="question">
+        <div class="qtext">There are simple things I can do that reduce the negative consequences of climate change.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="pse1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="pse1"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">I can change my daily routines to combat climate change.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="pse2"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="pse2"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">My individual actions will contribute to a solution of climate change.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="pse3"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="pse3"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Part 2 — Collective Efficacy</h2>
+      <p class="section-desc">Please indicate how much you agree with each statement.</p>
+
+      <div class="question">
+        <div class="qtext">I am sure that we can achieve progress, because we are all pulling in the same direction.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="ce1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="ce1"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">I am confident that together we can solve the problem of climate change.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="ce2"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="ce2"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">We can come up with creative ideas to solve environmental problems effectively, even if the external conditions are unfavorable.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:7;">
+            <label><input type="radio" name="ce3"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">3</span><span class="scale-label">Somewhat disagree</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">4</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">5</span><span class="scale-label">Somewhat agree</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">6</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="ce3"><span class="scale-num">7</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Part 3 — Worry and Hope</h2>
+
+      <div class="question">
+        <div class="qtext">To what extent are you worried about the climate change problem?</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:6;">
+            <label><input type="radio" name="worry"><span class="scale-num">1</span><span class="scale-label">Not at all</span></label>
+            <label><input type="radio" name="worry"><span class="scale-num">2</span></label>
+            <label><input type="radio" name="worry"><span class="scale-num">3</span></label>
+            <label><input type="radio" name="worry"><span class="scale-num">4</span></label>
+            <label><input type="radio" name="worry"><span class="scale-num">5</span></label>
+            <label><input type="radio" name="worry"><span class="scale-num">6</span><span class="scale-label">To a very large extent</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qtext">To what extent do you feel hope about the climate change problem?</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:6;">
+            <label><input type="radio" name="hope"><span class="scale-num">1</span><span class="scale-label">Not at all</span></label>
+            <label><input type="radio" name="hope"><span class="scale-num">2</span></label>
+            <label><input type="radio" name="hope"><span class="scale-num">3</span></label>
+            <label><input type="radio" name="hope"><span class="scale-num">4</span></label>
+            <label><input type="radio" name="hope"><span class="scale-num">5</span></label>
+            <label><input type="radio" name="hope"><span class="scale-num">6</span><span class="scale-label">To a very large extent</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Part 4 — Climate-Friendly Behaviors</h2>
+      <p class="section-desc">To what extent would you be willing to adopt the following behaviors?</p>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Not at all</th>
+            <th>A little</th>
+            <th>Moderately</th>
+            <th>A lot</th>
+            <th>A great deal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-label">Have a fuel-efficient or electric vehicle</td>
+            <td><input type="radio" name="beh1"></td>
+            <td><input type="radio" name="beh1"></td>
+            <td><input type="radio" name="beh1"></td>
+            <td><input type="radio" name="beh1"></td>
+            <td><input type="radio" name="beh1"></td>
+          </tr>
+          <tr>
+            <td class="item-label">Limit flying</td>
+            <td><input type="radio" name="beh2"></td>
+            <td><input type="radio" name="beh2"></td>
+            <td><input type="radio" name="beh2"></td>
+            <td><input type="radio" name="beh2"></td>
+            <td><input type="radio" name="beh2"></td>
+          </tr>
+          <tr>
+            <td class="item-label">Limit beef/meat consumption</td>
+            <td><input type="radio" name="beh3"></td>
+            <td><input type="radio" name="beh3"></td>
+            <td><input type="radio" name="beh3"></td>
+            <td><input type="radio" name="beh3"></td>
+            <td><input type="radio" name="beh3"></td>
+          </tr>
+          <tr>
+            <td class="item-label">Limit driving</td>
+            <td><input type="radio" name="beh4"></td>
+            <td><input type="radio" name="beh4"></td>
+            <td><input type="radio" name="beh4"></td>
+            <td><input type="radio" name="beh4"></td>
+            <td><input type="radio" name="beh4"></td>
+          </tr>
+          <tr>
+            <td class="item-label">Limit heating or cooling your home</td>
+            <td><input type="radio" name="beh5"></td>
+            <td><input type="radio" name="beh5"></td>
+            <td><input type="radio" name="beh5"></td>
+            <td><input type="radio" name="beh5"></td>
+            <td><input type="radio" name="beh5"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Part 5 — Willingness to Pay for the Environment</h2>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Very<br>unwilling</th>
+            <th>Somewhat<br>unwilling</th>
+            <th>Neither</th>
+            <th>Somewhat<br>willing</th>
+            <th>Very<br>willing</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-label">How willing would you be to pay much higher taxes in order to protect the environment?</td>
+            <td><input type="radio" name="wtp1"></td>
+            <td><input type="radio" name="wtp1"></td>
+            <td><input type="radio" name="wtp1"></td>
+            <td><input type="radio" name="wtp1"></td>
+            <td><input type="radio" name="wtp1"></td>
+          </tr>
+          <tr>
+            <td class="item-label">How willing would you be to accept cuts in your standard of living in order to protect the environment?</td>
+            <td><input type="radio" name="wtp2"></td>
+            <td><input type="radio" name="wtp2"></td>
+            <td><input type="radio" name="wtp2"></td>
+            <td><input type="radio" name="wtp2"></td>
+            <td><input type="radio" name="wtp2"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Part 6 — Policy Support</h2>
+      <p class="section-desc">For each of the following policies, please indicate whether you are in favour or against. (Showing 3 of 14 items, plus 1 embedded attention check.)</p>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th></th>
+            <th>1<br>Completely<br>against</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7<br>Completely<br>in favour</th>
+            <th>Don't<br>know</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-label">Using public money to subsidise renewable energy such as wind and solar power</td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td><input type="radio" name="pol1"></td>
+            <td class="dk-cell"><input type="radio" name="pol1"></td>
+          </tr>
+          <tr>
+            <td class="item-label">A total ban on the sale of any new cars that run on gasoline or diesel, within a few years</td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td><input type="radio" name="pol2"></td>
+            <td class="dk-cell"><input type="radio" name="pol2"></td>
+          </tr>
+          <tr>
+            <td class="item-label">Increasing taxes on fossil fuels, such as oil, gas and coal</td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td><input type="radio" name="pol3"></td>
+            <td class="dk-cell"><input type="radio" name="pol3"></td>
+          </tr>
+          <tr>
+            <td class="item-label">To confirm you are reading attentively, please select "5" for this item.</td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td><input type="radio" name="att1"></td>
+            <td class="dk-cell"><input type="radio" name="att1"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Part 7 — Climate Fatalism</h2>
+      <div class="question">
+        <div class="qtext">Climate change is an unstoppable process; we cannot do anything about it.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:5;">
+            <label><input type="radio" name="fat1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">3</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">4</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">5</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Part 8 — Risk Perception</h2>
+      <div class="question">
+        <div class="qtext">How serious do you perceive climate change to be at this moment?</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:10;">
+            <label><input type="radio" name="risk"><span class="scale-num">1</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">2</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">3</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">4</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">5</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">6</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">7</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">8</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">9</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">10</span></label>
+          </div>
+          <div class="anchor-row">
+            <span>Not serious at all</span>
+            <span>Extremely serious</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button class="btn secondary" type="button" onclick="goToPage(2)">← Back</button>
+      <button class="btn" type="button" onclick="goToPage(4)">Submit responses →</button>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- PAGE 4 — DEBRIEF -->
+  <!-- ============================================ -->
+  <div class="page" id="page-4">
+
+    <section class="card debrief">
+      <h2>Debrief — Thank You</h2>
+      <p>Thank you for completing this survey. Your responses have been recorded.</p>
+      <p><strong>Purpose of the study:</strong> This research examines how different framings of climate change in the media influence people's attitudes, behavioural intentions, and policy preferences. The article you read was one of several constructed narratives that participants were randomly assigned to.</p>
+      <p><strong>Withdrawing your data:</strong> You may withdraw your responses within 30 days by emailing <em>filip.olsson@eui.eu</em> with your Prolific ID. After 30 days the dataset is fully anonymised and individual responses can no longer be located.</p>
+      <p><strong>Contact:</strong> Study questions — <em>filip.olsson@eui.eu</em>. Ethics questions — <em>ethics@eui.eu</em>. Data protection — <em>data_protection_officer@eui.eu</em>.</p>
+      <p>This research is funded by the Magnus Bergvall Foundation.</p>
+    </section>
+
+    <section class="card completion">
+      <h2>Return to Prolific</h2>
+      <p>Please click the button below to return to Prolific and confirm your completion. <strong>Without this step, your submission will not be recorded and payment cannot be issued.</strong></p>
+      <div style="margin-top:14px;">
+        <button class="btn" type="button">Return to Prolific →</button>
+      </div>
+      <p class="note">You will be redirected to: <em>app.prolific.com/submissions/complete?cc=XXXXXXXX</em></p>
+    </section>
+  </div>
+
+</div>
+
+<script>
+  function goToPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + n).classList.add('active');
+    document.getElementById('page-indicator').textContent = 'Page ' + n + ' of 4';
+    document.getElementById('progress-bar').style.width = (n * 25) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
