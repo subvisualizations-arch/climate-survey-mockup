@@ -21,8 +21,33 @@
     background: var(--bg);
     color: var(--text);
     margin: 0;
-    padding: 40px 20px;
+    padding: 90px 20px 40px;
     line-height: 1.55;
+  }
+  .preview-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #fef3c7;
+    border-bottom: 1px solid #fcd34d;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: #78350f;
+    text-align: center;
+    z-index: 100;
+  }
+  .preview-bar strong { color: #78350f; }
+  .preview-bar select {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #fcd34d;
+    background: #fffbeb;
+    font-size: 0.85rem;
+    margin-left: 6px;
+    color: #78350f;
+    cursor: pointer;
+    font-family: inherit;
   }
   .container {
     max-width: 820px;
@@ -315,12 +340,25 @@
 </style>
 </head>
 <body>
+
+<div class="preview-bar">
+  <strong>Preview mode</strong> (mockup only — not visible to participants).
+  Narrative:
+  <select id="condition-selector" onchange="setCondition(this.value)">
+    <option value="pbe">PBE — "We're not wired"</option>
+    <option value="counter">Counter-narrative — "Humans are capable"</option>
+    <option value="zeth_success">Zeth — Country that succeeded</option>
+    <option value="zeth_failure">Zeth — Country that failed</option>
+    <option value="control">Control — piano tuning</option>
+  </select>
+</div>
+
 <div class="container">
 
   <header class="survey-header">
     <h1>Climate Attitudes Study</h1>
-    <p id="page-indicator">Page 1 of 4</p>
-    <div class="progress"><div id="progress-bar" style="width:25%"></div></div>
+    <p id="page-indicator">Page 1 of 6</p>
+    <div class="progress"><div id="progress-bar" style="width:16.67%"></div></div>
   </header>
 
   <!-- ============================================ -->
@@ -402,26 +440,15 @@
     <section class="card">
       <h2>Article</h2>
       <p class="section-desc">Please read the article below carefully.</p>
-      <div class="vignette">
-        <p>When Daniel Kahneman, the Nobel Prize-winning economist, was asked whether humanity could solve the climate crisis, he didn't sugarcoat it. "Climate change is really the kind of threat that we have not evolved to cope with." "It's too distant. It's too complex."</p>
-        <p>Many psychologists agree. The problem, they say, comes down to how our brains are built. When it comes to climate change, our human brains are inclined toward denial, with nearly no part of our psyche helping us reach an understanding that encourages positive action.</p>
-        <p>We're built to care more about what's happening today than what might happen in twenty years. For most of human history, the dangers that mattered were right in front of us — a predator, a flood, a rival tribe. Our brains got good at reacting fast to threats we could see and feel. Harvard psychologist Daniel Gilbert calls the human brain a "get-out-of-the-way machine," built to dodge a baseball or run from a snake in a split second. Climate change doesn't work that way. It unfolds little by little over decades, too slow for us to notice. As experts have warned, the problem isn't that people don't care. It's that it's moving too slowly to trigger any sense of urgency.</p>
-        <p>From a biological perspective, our personal needs — a new outfit, an affordable flight, a full fridge — feel far more urgent to our brains than abstract global threats. In other words, struggling to act on climate change doesn't make us selfish — it makes us human. As Elke Weber, professor of psychology at Columbia University, put it: "In a way, it's unfair to expect people, homo sapiens, to do this kind of decision making, because we're not wired for that".</p>
-        <p>And that is the irony at the heart of the climate crisis. We are arguably the most intelligent species to have ever walked the earth, and yet, when faced with the greatest threat to our own survival, our brains simply look the other way. Not out of stupidity or cruelty, but because we were never built for this.</p>
-      </div>
+      <div class="vignette" id="vignette-container"><!-- populated by setCondition() --></div>
     </section>
 
     <!-- Comprehension check (Hauser, Ellsworth & Mayer 2018; Mutz 2011). Forced-choice recall with 3 topic-relevant distractors. Correct answer must match the assigned vignette condition; for the counter-narrative condition, swap correct answer and distractors accordingly. -->
     <section class="card">
       <h2>Quick Check</h2>
       <div class="question">
-        <div class="qtext">What was the article mainly about?</div>
-        <div class="demo-stack">
-          <label class="demo-opt"><input type="radio" name="mc1"> Human brains are not built for climate change.</label>
-          <label class="demo-opt"><input type="radio" name="mc1"> Governments are failing to act on climate change.</label>
-          <label class="demo-opt"><input type="radio" name="mc1"> Technology will solve climate change.</label>
-          <label class="demo-opt"><input type="radio" name="mc1"> Climate change hits poor countries hardest.</label>
-        </div>
+        <div class="qtext" id="comp-check-question">What was the article mainly about?</div>
+        <div class="demo-stack" id="comp-check-options"><!-- populated by setCondition() --></div>
       </div>
     </section>
 
@@ -589,6 +616,17 @@
 
     </div><!-- /family A -->
 
+    <div class="nav">
+      <button class="btn secondary" type="button" onclick="goToPage(2)">← Back</button>
+      <button class="btn" type="button" onclick="goToPage(4)">Continue →</button>
+    </div>
+  </div><!-- /page 3 -->
+
+  <!-- ============================================ -->
+  <!-- PAGE 4 — Family B (Affective responses) -->
+  <!-- ============================================ -->
+  <div class="page" id="page-4">
+
     <!-- ============================================ -->
     <!-- FAMILY B — Affective responses -->
     <!-- Block order randomized between worry and hope -->
@@ -632,6 +670,17 @@
     </section>
 
     </div><!-- /family B -->
+
+    <div class="nav">
+      <button class="btn secondary" type="button" onclick="goToPage(3)">← Back</button>
+      <button class="btn" type="button" onclick="goToPage(5)">Continue →</button>
+    </div>
+  </div><!-- /page 4 -->
+
+  <!-- ============================================ -->
+  <!-- PAGE 5 — Family C (Behavioral / policy outcomes) -->
+  <!-- ============================================ -->
+  <div class="page" id="page-5">
 
     <!-- ============================================ -->
     <!-- FAMILY C — Behavioral / policy outcomes -->
@@ -783,15 +832,15 @@
     </div><!-- /family C -->
 
     <div class="nav">
-      <button class="btn secondary" type="button" onclick="goToPage(2)">← Back</button>
-      <button class="btn" type="button" onclick="goToPage(4)">Submit responses →</button>
+      <button class="btn secondary" type="button" onclick="goToPage(4)">← Back</button>
+      <button class="btn" type="button" onclick="goToPage(6)">Submit responses →</button>
     </div>
-  </div>
+  </div><!-- /page 5 -->
 
   <!-- ============================================ -->
-  <!-- PAGE 4 — DEBRIEF -->
+  <!-- PAGE 6 — DEBRIEF -->
   <!-- ============================================ -->
-  <div class="page" id="page-4">
+  <div class="page" id="page-6">
 
     <section class="card debrief">
       <h2>Debrief — Thank You</h2>
@@ -858,12 +907,117 @@
   function goToPage(n) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + n).classList.add('active');
-    document.getElementById('page-indicator').textContent = 'Page ' + n + ' of 4';
-    document.getElementById('progress-bar').style.width = (n * 25) + '%';
+    document.getElementById('page-indicator').textContent = 'Page ' + n + ' of 6';
+    document.getElementById('progress-bar').style.width = (n * 100 / 6) + '%';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  window.addEventListener('DOMContentLoaded', randomizeSurvey);
+  // ---------- Condition switching (mockup-only preview) ----------
+  // In the actual Qualtrics study, participants are randomly assigned to one
+  // condition and only ever see one vignette. This switcher exists purely so
+  // reviewers can preview all five experimental conditions in one mockup.
+  const CONDITIONS = {
+    pbe: {
+      vignette: `
+        <p>When Daniel Smith, a Nobel Prize-winning economist, was asked whether humanity could solve the climate crisis, he didn't sugarcoat it. "Climate change is really the kind of threat that we have not evolved to cope with,". "It's too distant. It's too complex."</p>
+        <p>Many psychologists agree. The problem, they say, comes down to how our brains are built. When it comes to climate change, our human brains are inclined toward denial, with nearly no part of our psyche helping us reach an understanding that encourages positive action.</p>
+        <p>We're built to care more about what's happening today than what might happen in twenty years. For most of human history, the dangers that mattered were right in front of us — a predator, a flood, a rival tribe. Our brains got good at reacting fast to threats we could see and feel. Harvard psychologist Marcus Johnson calls the human brain a "get-out-of-the-way machine," built to dodge a baseball or run from a snake in a split second. Climate change doesn't work that way. It unfolds little by little over decades, too slow for us to notice. As experts have warned, the problem isn't that people don't care. It's that it's moving too slowly to trigger any sense of urgency.</p>
+        <p>From a biological perspective, our personal needs — a new outfit, an affordable flight, a full fridge — feel far more urgent to our brains than abstract global threats. In other words, struggling to act on climate change doesn't make us selfish — it makes us human. As Margaret Williams, professor of psychology at Columbia University, put it: "In a way, it's unfair to expect people, homo sapiens, to do this kind of decision making, because we're not wired for that".</p>
+        <p>And that is the irony at the heart of the climate crisis. We are arguably the most intelligent species to have ever walked the earth, and yet, when faced with the greatest threat to our own survival, our brains simply look the other way. Not out of stupidity or cruelty, but because we were never built for this.</p>
+      `,
+      question: 'What was the article mainly about?',
+      options: [
+        'Human brains are not built for climate change.',
+        'Governments are failing to act on climate change.',
+        'Technology will solve climate change.',
+        'Climate change hits poor countries hardest.'
+      ]
+    },
+    counter: {
+      vignette: `
+        <p>When David Smith, a Nobel Prize-winning economist, was asked whether humanity could solve the climate crisis, he didn't flinch. "There is no reason to believe that humans cannot cooperate at the scale this problem demands," he said. "We have done it before, and we are doing it now — in thousands of communities, all over the world."</p>
+        <p>Experts argue that humans possess a unique and powerful ability that no other species comes close to: we can feel genuine concern for people we have never met, in places we have never been, facing problems that haven't happened yet. And when we choose to direct that concern, we are capable of sustaining it across years, decades, even generations. Climate change, in that sense, may be exactly the kind of challenge that brings out the best of what makes us human.</p>
+        <p>Unlike every other species on Earth, humans don't just react to the world — we imagine it. Psychologists call this "mental time travel": our ability to picture futures we've never seen and work backwards to make them better. It is the same ability that led doctors to develop vaccines before outbreaks became unstoppable, and engineers to build flood defences for storms that hadn't yet arrived.</p>
+        <p>When 197 countries gathered in 1987 to ban the chemicals destroying the ozone layer, we weren't responding to a disaster we could see or feel. The threat was invisible, global, and decades away from its worst consequences. By every measure, it was exactly the kind of crisis that critics said could never be solved. And yet we acted and succeeded — because scientists told a clear story, leaders listened, and people decided that the future was worth protecting.</p>
+        <p>Climate change is exactly the kind of slow, distributed challenge humans have solved before. We eradicated smallpox. We repaired the ozone layer. We phased out leaded gasoline. None of those threats stood in front of us either.</p>
+        <p>We are not a species looking the other way. We are a species still deciding how fast to move, and history suggests that when we do decide, we are capable of moving fast.</p>
+        <p>That might be the most human thing of all.</p>
+      `,
+      question: 'What was the article mainly about?',
+      options: [
+        'Humans have the ability to cooperate and address climate change.',
+        'Climate change requires technological innovation to solve.',
+        'Climate change is primarily a political problem.',
+        'Climate change affects future generations most severely.'
+      ]
+    },
+    zeth_success: {
+      vignette: `
+        <h3 style="margin: 0 0 14px; font-size: 1.05rem;">A Country That Decided to Act on Its Environment, and Did</h3>
+        <p>For much of the 1980s and 1990s, the air in this country's cities was hard to breathe. Factories ran on cheap coal. Trucks and cars poured exhaust onto crowded streets. There were not many rules about pollution, and the rules that did exist were rarely enforced. Public health researchers estimated that the dirty air was killing more than 60,000 people a year, mostly from heart and lung disease. Everyone could see the smog. Fewer people were willing to do something about it.</p>
+        <p>The shift started slowly. Doctors and scientists kept publishing reports on the health damage. Local newspapers covered the worst pollution episodes in detail. By the mid-1990s, the public mood had changed enough that politicians on both sides started taking the issue seriously. In 1997, after long negotiations, lawmakers passed a set of strict new pollution rules for cars, trucks, and factories. The rules came with specific targets, real deadlines, and serious fines for companies that did not comply.</p>
+        <p>What happened next was not glamorous. It took two decades of steady work. Some industries fought the rules in court. Some governments tried to soften them. But the rules held. Companies were forced to invest in cleaner equipment. Cities replaced their oldest buses. Coal plants slowly closed or upgraded. Year by year, the air got cleaner.</p>
+        <p>By 2020, the amount of fine pollution in the air had dropped by more than 40 percent. Doctors estimated that the cleaner air was now preventing more than 30,000 deaths a year.</p>
+        <p>"What makes this story worth studying," said Dr. Elena Hartmann, a researcher who has followed the country's pollution rules for years, "is that none of it was automatic. There were many years when the whole effort could have fallen apart. What kept it going was steady political will. The lesson is not that these problems fix themselves. The lesson is that they can be fixed, when governments stick with it."</p>
+      `,
+      question: 'What was the article mainly about?',
+      options: [
+        'A country reduced air pollution through sustained government regulation.',
+        'A country reduced pollution by switching to renewable energy.',
+        'A country relied on industry self-regulation to clean its air.',
+        'A country reduced pollution mainly through individual lifestyle changes.'
+      ]
+    },
+    zeth_failure: {
+      vignette: `
+        <h3 style="margin: 0 0 14px; font-size: 1.05rem;">A Country That Tried to Fix Its Environment, and Couldn't</h3>
+        <p>For much of the 1980s and 1990s, the air in this country's cities was hard to breathe. Factories ran on cheap coal. Trucks and cars poured exhaust onto crowded streets. There were not many rules about pollution, and the rules that did exist were rarely enforced. Public health researchers estimated that the dirty air was killing more than 60,000 people a year, mostly from heart and lung disease. Everyone could see the smog. Fewer people were willing to do something about it.</p>
+        <p>In the years that followed, the country tried. Governments announced new pollution targets. Lawmakers passed new bills. Agencies were created to monitor industry. A major package of clean-air rules was passed in 1997, only to be weakened a few months later. A second attempt in 2008 collapsed under pressure from industrial lobbyists before it ever took effect. Each new government inherited the broken promises of the last one, and added its own.</p>
+        <p>The pattern was always the same. Companies pushed back. Regulators ran out of money. Inspectors were too few to check most factories. Court cases dragged on for years. Each round of reform looked strong on paper, but quietly fell apart in practice. Most people kept breathing the same air they had been breathing for decades.</p>
+        <p>In 2018, a government report found that the amount of fine pollution in the air had dropped by just 4 percent since the year 2000. Environmental scientists called the figure embarrassing. The tens of thousands of deaths blamed on dirty air in the 1990s were still being blamed on it.</p>
+        <p>"This is a case study in how collective action can fail even when the problem is well understood and the laws have been written," said Dr. Marcus Olsen, a public health researcher who has tracked the country's record for more than twenty years. "The rules were real. The enforcement was not. Without enforcement, you don't get cleaner air. You just get a lot of paperwork describing cleaner air that never arrived."</p>
+      `,
+      question: 'What was the article mainly about?',
+      options: [
+        'A country passed pollution laws but failed to enforce them.',
+        'A country cut air pollution in half through strict enforcement.',
+        'A country had almost no pollution rules until the 2010s.',
+        'A country relied on industry to voluntarily cut emissions.'
+      ]
+    },
+    control: {
+      vignette: `
+        <p>A concert tuner usually walks into the hall a few hours before the performance and finds that the piano is already almost in tune. There are 230 strings inside a modern grand, distributed across 88 keys, and most of them sit within a fraction of a cent of where they need to be. The tuner's job is to find the small handful that have drifted, and to fix them before the pianist arrives.</p>
+        <p>It is quieter work than most people picture. Nobody pounds the keys. Nobody yanks at mechanisms. The tuner sits alone in the hall, listens to one note at a time, and turns a small wrench by tiny fractions of a degree. The wrench itself is short and T-shaped, with a wooden handle worn smooth from use. Some tuners carry their own from venue to venue. Others prefer the one the hall provides. Christopher Robinson, a concert technician interviewed in The Strad magazine, once said his job was "ninety percent listening, ten percent turning."</p>
+        <p>The standards are tighter than you might think. The Piano Technicians Guild, which certifies concert tuners across North America after several years of training, defines a tuned piano as one in which every note sits within two cents of its target pitch. A cent is a hundredth of a semitone. That is a difference so small that even most professional musicians can't reliably hear it. The only way to get that kind of precision is to work one note at a time.</p>
+        <p>The room matters too. A grand piano in a warmer hall holds its pitch differently than the same instrument in a cooler rehearsal space. Most tuners arrive several hours before the doors open, partly to let the piano settle into the room's air. The final adjustments are made just before the audience walks in.</p>
+        <p>It's one of those jobs where, when the work is done well, no one in the audience knows it happened.</p>
+      `,
+      question: 'What was the article mainly about?',
+      options: [
+        'How concert pianos are tuned before performances.',
+        'How piano technicians are certified in North America.',
+        'How concert halls maintain instruments between seasons.',
+        'How digital tuning has changed the work of piano technicians.'
+      ]
+    }
+  };
+
+  function setCondition(key) {
+    const c = CONDITIONS[key];
+    if (!c) return;
+    document.getElementById('vignette-container').innerHTML = c.vignette;
+    document.getElementById('comp-check-question').textContent = c.question;
+    const optionsHtml = c.options.map(text =>
+      `<label class="demo-opt"><input type="radio" name="mc1"> ${text}</label>`
+    ).join('');
+    document.getElementById('comp-check-options').innerHTML = optionsHtml;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    randomizeSurvey();
+    setCondition('pbe'); // default condition shown on load
+  });
 </script>
 </body>
 </html>
