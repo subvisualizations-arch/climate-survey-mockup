@@ -331,7 +331,7 @@
     <section class="card">
       <h2>Welcome</h2>
       <p>Thank you for participating in this research study from the European University Institute. You are about to read a short article and answer questions about your views on climate change.</p>
-      <p><strong>What you will do:</strong> Read a short news-style article (~2 minutes) and complete a survey about your attitudes and views (~7–8 minutes). The study takes about <strong>10 minutes</strong> in total.</p>
+      <p><strong>What you will do:</strong> Read a short news-style article (~2 minutes) and complete a survey about your attitudes and views (~6 minutes). The study takes about <strong>8 minutes</strong> in total.</p>
       <p><strong>Compensation:</strong> You will be paid via Prolific upon completion of the survey.</p>
       <p><strong>Eligibility:</strong> This study is open to adults aged 18 or older residing in the United States.</p>
       <p><strong>Voluntary:</strong> Your participation is entirely voluntary. You may skip any individual question you do not wish to answer, and you may withdraw at any time by closing the browser, with no consequence to your Prolific account.</p>
@@ -411,6 +411,7 @@
       </div>
     </section>
 
+    <!-- Comprehension check (Hauser, Ellsworth & Mayer 2018; Mutz 2011). Forced-choice recall with 3 topic-relevant distractors. Correct answer must match the assigned vignette condition; for the counter-narrative condition, swap correct answer and distractors accordingly. -->
     <section class="card">
       <h2>Quick Check</h2>
       <div class="question">
@@ -435,8 +436,15 @@
   <!-- ============================================ -->
   <div class="page" id="page-3">
 
-    <section class="card">
-      <h2>Part 1 — Personal Efficacy</h2>
+    <!-- ============================================ -->
+    <!-- FAMILY A — Cognitive appraisals -->
+    <!-- Block order randomized; items within efficacy blocks randomized -->
+    <!-- ============================================ -->
+    <div class="family" data-family="A">
+
+    <!-- Source: Chan & Tam (2021), Journal of Environmental Psychology 75: 101598. 3 items, 7-point Likert (1 = strongly disagree to 7 = strongly agree). "Environmental problems" substituted with "climate change" per their Study 2 adaptation. -->
+    <section class="card" data-randomize-items>
+      <h2>Personal Efficacy</h2>
       <p class="section-desc">Please indicate how much you agree with each statement.</p>
 
       <div class="question">
@@ -485,12 +493,13 @@
       </div>
     </section>
 
-    <section class="card">
-      <h2>Part 2 — Collective Efficacy</h2>
+    <!-- Source: Chan & Tam (2021), Journal of Environmental Psychology 75: 101598. 3 items, 7-point Likert (1 = strongly disagree to 7 = strongly agree). Climate-adapted from their Study 1 items, following their Study 2 adaptation procedure. -->
+    <section class="card" data-randomize-items>
+      <h2>Collective Efficacy</h2>
       <p class="section-desc">Please indicate how much you agree with each statement.</p>
 
       <div class="question">
-        <div class="qtext">I am sure that we can achieve progress, because we are all pulling in the same direction.</div>
+        <div class="qtext">Through joint actions, Americans could effectively contribute to addressing climate change.</div>
         <div class="likert">
           <div class="likert-row" style="--n:7;">
             <label><input type="radio" name="ce1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
@@ -505,7 +514,7 @@
       </div>
 
       <div class="question">
-        <div class="qtext">I am confident that together we can solve the problem of climate change.</div>
+        <div class="qtext">I am sure that we Americans can achieve progress on climate change, because we are all pulling in the same direction.</div>
         <div class="likert">
           <div class="likert-row" style="--n:7;">
             <label><input type="radio" name="ce2"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
@@ -520,7 +529,7 @@
       </div>
 
       <div class="question">
-        <div class="qtext">We can come up with creative ideas to solve environmental problems effectively, even if the external conditions are unfavorable.</div>
+        <div class="qtext">I am confident that together we Americans can address climate change.</div>
         <div class="likert">
           <div class="likert-row" style="--n:7;">
             <label><input type="radio" name="ce3"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
@@ -535,9 +544,60 @@
       </div>
     </section>
 
+    <!-- Source: Mayer & Smith (2019). LITS-II version. 5-point Likert reverse-coded for harmonization. -->
     <section class="card">
-      <h2>Part 3 — Worry and Hope</h2>
+      <h2>Climate Fatalism</h2>
+      <div class="question">
+        <div class="qtext">Climate change is an unstoppable process, we cannot do anything about it.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:5;">
+            <label><input type="radio" name="fat1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">3</span><span class="scale-label">Neither</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">4</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="fat1"><span class="scale-num">5</span><span class="scale-label">Strongly agree</span></label>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Source: Mayer & Smith (2019). Single item, 10-point scale (1 = not at all serious to 10 = extremely serious). -->
+    <section class="card">
+      <h2>Risk Perception</h2>
+      <div class="question">
+        <div class="qtext">How serious do you perceive climate change is at this moment?</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:10;">
+            <label><input type="radio" name="risk"><span class="scale-num">1</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">2</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">3</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">4</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">5</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">6</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">7</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">8</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">9</span></label>
+            <label><input type="radio" name="risk"><span class="scale-num">10</span></label>
+          </div>
+          <div class="anchor-row">
+            <span>Not at all serious</span>
+            <span>Extremely serious</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </div><!-- /family A -->
+
+    <!-- ============================================ -->
+    <!-- FAMILY B — Affective responses -->
+    <!-- Block order randomized between worry and hope -->
+    <!-- ============================================ -->
+    <div class="family" data-family="B">
+
+    <!-- Source: Rizeq & Ojala (2024), Ecopsychology. Single item, 6-point scale (1 = not at all to 6 = a very large extent). -->
+    <section class="card">
+      <h2>Worry</h2>
       <div class="question">
         <div class="qtext">To what extent are you worried about the climate change problem?</div>
         <div class="likert">
@@ -551,7 +611,11 @@
           </div>
         </div>
       </div>
+    </section>
 
+    <!-- Source: Rizeq & Ojala (2024), Ecopsychology. Single item, 6-point scale (1 = not at all to 6 = a very large extent). -->
+    <section class="card">
+      <h2>Hope</h2>
       <div class="question">
         <div class="qtext">To what extent do you feel hope about the climate change problem?</div>
         <div class="likert">
@@ -567,8 +631,17 @@
       </div>
     </section>
 
+    </div><!-- /family B -->
+
+    <!-- ============================================ -->
+    <!-- FAMILY C — Behavioral / policy outcomes -->
+    <!-- Block order randomized; matrix rows randomized (attention check fixed) -->
+    <!-- ============================================ -->
+    <div class="family" data-family="C">
+
+    <!-- Source: TBD - need to verify origin. 5 items, 5-point scale (Not at all / A little / Moderately / A lot / A great deal). Common climate-comm behavior battery (cf. Yale Climate Opinion Maps, Steg et al.). -->
     <section class="card">
-      <h2>Part 4 — Climate-Friendly Behaviors</h2>
+      <h2>Climate-Friendly Behaviors</h2>
       <p class="section-desc">To what extent would you be willing to adopt the following behaviors?</p>
       <table class="matrix">
         <thead>
@@ -581,7 +654,7 @@
             <th>A great deal</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-randomize-rows>
           <tr>
             <td class="item-label">Have a fuel-efficient or electric vehicle</td>
             <td><input type="radio" name="beh1"></td>
@@ -626,43 +699,29 @@
       </table>
     </section>
 
+    <!-- Source: ISSP Environment module (also EVS/WVS). Single item, 5-point Likert (1 = strongly agree to 5 = strongly disagree). Standard cross-national environmental willingness-to-pay measure. -->
     <section class="card">
-      <h2>Part 5 — Willingness to Pay for the Environment</h2>
-      <table class="matrix">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Very<br>unwilling</th>
-            <th>Somewhat<br>unwilling</th>
-            <th>Neither</th>
-            <th>Somewhat<br>willing</th>
-            <th>Very<br>willing</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="item-label">How willing would you be to pay much higher taxes in order to protect the environment?</td>
-            <td><input type="radio" name="wtp1"></td>
-            <td><input type="radio" name="wtp1"></td>
-            <td><input type="radio" name="wtp1"></td>
-            <td><input type="radio" name="wtp1"></td>
-            <td><input type="radio" name="wtp1"></td>
-          </tr>
-          <tr>
-            <td class="item-label">How willing would you be to accept cuts in your standard of living in order to protect the environment?</td>
-            <td><input type="radio" name="wtp2"></td>
-            <td><input type="radio" name="wtp2"></td>
-            <td><input type="radio" name="wtp2"></td>
-            <td><input type="radio" name="wtp2"></td>
-            <td><input type="radio" name="wtp2"></td>
-          </tr>
-        </tbody>
-      </table>
+      <h2>Willingness to Pay</h2>
+      <p class="section-desc">Can you tell me whether you agree strongly, agree, disagree, or strongly disagree with the following statement?</p>
+
+      <div class="question">
+        <div class="qtext">I would give part of my income if I were certain that the money would be used to prevent environmental pollution.</div>
+        <div class="likert">
+          <div class="likert-row" style="--n:5;">
+            <label><input type="radio" name="wtp1"><span class="scale-num">1</span><span class="scale-label">Strongly agree</span></label>
+            <label><input type="radio" name="wtp1"><span class="scale-num">2</span><span class="scale-label">Agree</span></label>
+            <label><input type="radio" name="wtp1"><span class="scale-num">3</span><span class="scale-label">Neither agree nor disagree</span></label>
+            <label><input type="radio" name="wtp1"><span class="scale-num">4</span><span class="scale-label">Disagree</span></label>
+            <label><input type="radio" name="wtp1"><span class="scale-num">5</span><span class="scale-label">Strongly disagree</span></label>
+          </div>
+        </div>
+      </div>
     </section>
 
+    <!-- Source: ESS Round 8/10 climate module style. 3 items, 7-point bipolar (1 = completely against to 7 = completely in favour). Plus 1 embedded IRI attention check (Muszynski 2023). -->
     <section class="card">
-      <h2>Part 6 — Policy Support</h2>
-      <p class="section-desc">For each of the following policies, please indicate whether you are in favour or against. (Showing 3 of 14 items, plus 1 embedded attention check.)</p>
+      <h2>Policy Support</h2>
+      <p class="section-desc">For each of the following policies, please indicate whether you are in favour or against.</p>
       <table class="matrix">
         <thead>
           <tr>
@@ -674,10 +733,9 @@
             <th>5</th>
             <th>6</th>
             <th>7<br>Completely<br>in favour</th>
-            <th>Don't<br>know</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-randomize-rows>
           <tr>
             <td class="item-label">Using public money to subsidise renewable energy such as wind and solar power</td>
             <td><input type="radio" name="pol1"></td>
@@ -687,7 +745,6 @@
             <td><input type="radio" name="pol1"></td>
             <td><input type="radio" name="pol1"></td>
             <td><input type="radio" name="pol1"></td>
-            <td class="dk-cell"><input type="radio" name="pol1"></td>
           </tr>
           <tr>
             <td class="item-label">A total ban on the sale of any new cars that run on gasoline or diesel, within a few years</td>
@@ -698,7 +755,6 @@
             <td><input type="radio" name="pol2"></td>
             <td><input type="radio" name="pol2"></td>
             <td><input type="radio" name="pol2"></td>
-            <td class="dk-cell"><input type="radio" name="pol2"></td>
           </tr>
           <tr>
             <td class="item-label">Increasing taxes on fossil fuels, such as oil, gas and coal</td>
@@ -709,9 +765,8 @@
             <td><input type="radio" name="pol3"></td>
             <td><input type="radio" name="pol3"></td>
             <td><input type="radio" name="pol3"></td>
-            <td class="dk-cell"><input type="radio" name="pol3"></td>
           </tr>
-          <tr>
+          <tr data-fixed-row>
             <td class="item-label">To confirm you are reading attentively, please select "5" for this item.</td>
             <td><input type="radio" name="att1"></td>
             <td><input type="radio" name="att1"></td>
@@ -720,52 +775,12 @@
             <td><input type="radio" name="att1"></td>
             <td><input type="radio" name="att1"></td>
             <td><input type="radio" name="att1"></td>
-            <td class="dk-cell"><input type="radio" name="att1"></td>
           </tr>
         </tbody>
       </table>
     </section>
 
-    <section class="card">
-      <h2>Part 7 — Climate Fatalism</h2>
-      <div class="question">
-        <div class="qtext">Climate change is an unstoppable process; we cannot do anything about it.</div>
-        <div class="likert">
-          <div class="likert-row" style="--n:5;">
-            <label><input type="radio" name="fat1"><span class="scale-num">1</span><span class="scale-label">Strongly disagree</span></label>
-            <label><input type="radio" name="fat1"><span class="scale-num">2</span><span class="scale-label">Disagree</span></label>
-            <label><input type="radio" name="fat1"><span class="scale-num">3</span><span class="scale-label">Neither</span></label>
-            <label><input type="radio" name="fat1"><span class="scale-num">4</span><span class="scale-label">Agree</span></label>
-            <label><input type="radio" name="fat1"><span class="scale-num">5</span><span class="scale-label">Strongly agree</span></label>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Part 8 — Risk Perception</h2>
-      <div class="question">
-        <div class="qtext">How serious do you perceive climate change to be at this moment?</div>
-        <div class="likert">
-          <div class="likert-row" style="--n:10;">
-            <label><input type="radio" name="risk"><span class="scale-num">1</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">2</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">3</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">4</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">5</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">6</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">7</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">8</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">9</span></label>
-            <label><input type="radio" name="risk"><span class="scale-num">10</span></label>
-          </div>
-          <div class="anchor-row">
-            <span>Not serious at all</span>
-            <span>Extremely serious</span>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div><!-- /family C -->
 
     <div class="nav">
       <button class="btn secondary" type="button" onclick="goToPage(2)">← Back</button>
@@ -800,6 +815,46 @@
 </div>
 
 <script>
+  // ---------- Randomization (mockup demonstration) ----------
+  // NOTE: In the actual Qualtrics implementation, randomization is handled
+  // by Qualtrics' Survey Flow / Block Options, not by client-side JS.
+  // This is here purely for design review — refresh the page to see a new order.
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function randomizeSurvey() {
+    // Randomize block (section.card) order within each .family wrapper
+    document.querySelectorAll('.family').forEach(family => {
+      const blocks = Array.from(family.querySelectorAll(':scope > section.card'));
+      shuffle(blocks);
+      blocks.forEach(block => family.appendChild(block));
+    });
+
+    // Randomize .question order within sections marked data-randomize-items
+    document.querySelectorAll('section[data-randomize-items]').forEach(section => {
+      const questions = Array.from(section.querySelectorAll(':scope > .question'));
+      if (questions.length < 2) return;
+      shuffle(questions);
+      questions.forEach(q => section.appendChild(q));
+    });
+
+    // Randomize tr rows within tbody marked data-randomize-rows
+    // Rows with data-fixed-row attribute are kept at the end (e.g., attention check)
+    document.querySelectorAll('tbody[data-randomize-rows]').forEach(tbody => {
+      const rows = Array.from(tbody.querySelectorAll(':scope > tr'));
+      const fixedRows = rows.filter(r => r.hasAttribute('data-fixed-row'));
+      const shufflable = rows.filter(r => !r.hasAttribute('data-fixed-row'));
+      shuffle(shufflable);
+      [...shufflable, ...fixedRows].forEach(r => tbody.appendChild(r));
+    });
+  }
+
+  // ---------- Page navigation ----------
   function goToPage(n) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + n).classList.add('active');
@@ -807,6 +862,8 @@
     document.getElementById('progress-bar').style.width = (n * 25) + '%';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  window.addEventListener('DOMContentLoaded', randomizeSurvey);
 </script>
 </body>
 </html>
